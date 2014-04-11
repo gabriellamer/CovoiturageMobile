@@ -1,13 +1,11 @@
 package uqtr.covoituragemobile;
 
-import model.Ad;
 import model.CovoiturageContract.AdEntry;
 import model.CovoiturageContract.CovoiturageDbHelper;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
