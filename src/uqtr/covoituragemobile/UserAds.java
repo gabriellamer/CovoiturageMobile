@@ -1,21 +1,15 @@
 package uqtr.covoituragemobile;
 
-import java.io.File;
 import java.util.ArrayList;
-
-import org.apache.http.client.UserTokenHandler;
 
 import model.*;
 import model.CovoiturageContract.AdEntry;
 import model.CovoiturageContract.CovoiturageDbHelper;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.style.UpdateLayout;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
