@@ -25,7 +25,20 @@
         <activity
             android:name="uqtr.covoituragemobile.ManageAds"
             android:label="@string/title_activity_add_ads"
-            android:parentActivityName="uqtr.covoituragemobile.UserAds">
+            android:parentActivityName="uqtr.covoituragemobile.UserAds" >
+        </activity>
+        <activity
+            android:name="uqtr.covoituragemobile.User"
+            android:label="@string/title_activity_user" >
+        </activity>
+        <activity
+            android:name="uqtr.covoituragemobile.Login"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateVisible" >
+        </activity>
+        <activity
+            android:name="uqtr.covoituragemobile.ManageUser"
+            android:label="@string/title_activity_manage_user" >
         </activity>
     </application>
 

@@ -16,7 +16,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="Titre"
+        android:hint="@string/title"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         android:textColorLink="#55CB6A" >
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="20dp"
         android:ems="10"
-        android:hint="Nombre de place"
+        android:hint="@string/nb_seats"
         android:inputType="number"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF" />
@@ -39,7 +39,7 @@
         android:id="@+id/cbxDriver"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Conducteur"
+        android:text="@string/driver"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF" />
 
@@ -47,14 +47,14 @@
         android:id="@+id/cbxAirConditionner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Air climatisé"
+        android:text="@string/air_conditionner"
         android:textColor="#FFFFFF" />
 
     <CheckBox
         android:id="@+id/cbxHeater"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Chauffage"
+        android:text="@string/heater"
         android:textColor="#FFFFFF" />
 
     <EditText
@@ -64,7 +64,7 @@
         android:layout_marginBottom="20dp"
         android:layout_marginTop="20dp"
         android:ems="10"
-        android:hint="Description"
+        android:hint="@string/description"
         android:inputType="textMultiLine"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF" />
@@ -88,8 +88,8 @@
                 android:background="#55CB6A"
                 android:height="40dp"
                 android:minHeight="35dp"
-                android:text="Supprimer"
-                android:visibility="gone"
+                android:text="@string/action_delete"
+                android:visibility="invisible"
                 android:width="115dp" />
 
             <Button
@@ -99,9 +99,8 @@
                 android:background="#55CB6A"
                 android:height="40dp"
                 android:minHeight="35dp"
-                android:text="Sauvegarder"
+                android:text="@string/action_save"
                 android:width="115dp" />
-
         </LinearLayout>
 
     </RelativeLayout>
