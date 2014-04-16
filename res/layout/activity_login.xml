@@ -42,7 +42,7 @@
             android:orientation="vertical" >
 
             <EditText
-                android:id="@+id/user_name"
+                android:id="@+id/user_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/prompt_username"

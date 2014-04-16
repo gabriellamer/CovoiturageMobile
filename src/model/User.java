@@ -9,10 +9,10 @@ public class User {
 	private Address address;
 	private String phone;
 	private String email;
-	private char sexe;
+	private char sex;
 	private int age;
 	
-	public User(int id, String lastName, String name, String username, String password, Address address, String phone, String email, char sexe, int age) {
+	public User(int id, String lastName, String name, String username, String password, Address address, String phone, String email, char sex, int age) {
 		this.setId(id);
 		this.lastName = lastName;
 		this.name = name;
@@ -21,7 +21,7 @@ public class User {
 		this.address = address;
 		this.phone = phone;
 		this.email = email;
-		this.sexe = sexe;
+		this.sex = sex;
 		this.age = age;
 	}
 
@@ -89,12 +89,12 @@ public class User {
 		this.email = email;
 	}
 
-	public char getSexe() {
-		return sexe;
+	public char getSex() {
+		return sex;
 	}
 
-	public void setSexe(char sexe) {
-		this.sexe = sexe;
+	public void setSex(char sexe) {
+		this.sex = sexe;
 	}
 
 	public int getAge() {
