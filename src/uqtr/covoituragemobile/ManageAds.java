@@ -1,10 +1,6 @@
 package uqtr.covoituragemobile;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import model.CovoiturageContract.AdEntry;
 import model.CovoiturageContract.CovoiturageDbHelper;
 import ServerTasks.CreateAd;
@@ -21,9 +17,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 public class ManageAds extends Activity {
 
@@ -95,7 +88,7 @@ public class ManageAds extends Activity {
 		params.put("idUser", userId);
 		params.put("title", title.getText().toString());
 		params.put("nbPlace", nbPlace.getText().toString());
-		params.put("driver", airConditionner.isChecked()? "1": "0");
+		params.put("driver", driver.isChecked()? "1": "0");
 		params.put("airConditionner", airConditionner.isChecked()? "1": "0");
 		params.put("heater", heater.isChecked()? "1": "0");
 		params.put("description", description.getText().toString());
