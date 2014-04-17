@@ -1,9 +1,17 @@
 package uqtr.covoituragemobile;
 
+import java.util.HashMap;
+
 import model.Session;
 import model.User;
+import ServerTasks.DeleteUser;
+import ServerTasks.ModifyUser;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -11,6 +19,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 
 public class ManageUser extends Activity {
+
+	private static final String URL_DELETE_USER = null;
+	private static final String URL_MODIFY_USER = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +82,31 @@ public class ManageUser extends Activity {
 	}
 	
 	private void deleteUser(String userId) {
+			
+		// Building Parameters
+		HashMap<String, String> params = new HashMap<String, String>();
 		
-		//TODO lien avec le serveur
+		params.put("URL", URL_DELETE_USER);
+		params.put("idUser", userId);
+		
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        
+        if(networkInfo != null && networkInfo.isConnected())
+        {
+        	new DeleteUser().execute(params);
+        }
+        else
+        {
+        	AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+
+            dlgAlert.setMessage("No network connection available.");
+            dlgAlert.setTitle("Error Message...");
+            dlgAlert.setPositiveButton("OK", null);
+            dlgAlert.setCancelable(true);
+            dlgAlert.create().show();
+        }
+		
 		Session.setCurrentUser(null);
 		
 		Intent logoutIntent = new Intent(this, Login.class);
@@ -134,6 +168,40 @@ public class ManageUser extends Activity {
 		user.getAddress().setCity(city.getText().toString());
 		user.getAddress().setProvince(province.getText().toString());
 		
-		//TODO modify in server
+		// Building Parameters
+		HashMap<String, String> params = new HashMap<String, String>();
+		
+		params.put("URL", URL_MODIFY_USER);
+		params.put("idUser", "" + user.getId());
+		params.put("username", user.getUsername());
+		params.put("lastName", user.getLastName());
+		params.put("name", user.getName());
+		params.put("phone", user.getPhone());
+		params.put("email", user.getEmail());
+		params.put("sex", "" + user.getSex());
+		params.put("age", "" + user.getAge());
+		
+		params.put("streetNb", "" + user.getAddress().getStreetNb());
+		params.put("streetName", user.getAddress().getStreetName());
+		params.put("city", user.getAddress().getCity());
+		params.put("province", user.getAddress().getProvince());
+
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        
+        if(networkInfo != null && networkInfo.isConnected())
+        {
+        	new ModifyUser().execute(params);
+        }
+        else
+        {
+        	AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+
+            dlgAlert.setMessage("No network connection available.");
+            dlgAlert.setTitle("Error Message...");
+            dlgAlert.setPositiveButton("OK", null);
+            dlgAlert.setCancelable(true);
+            dlgAlert.create().show();
+        }
 	}
 }

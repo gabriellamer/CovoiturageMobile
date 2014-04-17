@@ -1,13 +1,38 @@
 package uqtr.covoituragemobile;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import model.Session;
+import model.User;
+import model.Address;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
@@ -20,17 +45,6 @@ import android.widget.TextView;
  * well.
  */
 public class Login extends Activity {
-	/**
-	 * A dummy authentication store containing known user names and passwords.
-	 * TODO: remove after connecting to a real authentication system.
-	 */
-	private static final String[] DUMMY_CREDENTIALS = new String[] {
-			"foo@example.com:hello", "bar@example.com:world" };
-
-	/**
-	 * The default email to populate the email field with.
-	 */
-	public static final String EXTRA_EMAIL = "com.example.android.authenticatordemo.extra.EMAIL";
 
 	/**
 	 * Keep track of the login task to ensure we can cancel it if requested.
@@ -38,11 +52,11 @@ public class Login extends Activity {
 	private UserLoginTask mAuthTask = null;
 
 	// Values for email and password at the time of the login attempt.
-	private String mEmail;
+	private String mUsername;
 	private String mPassword;
 
 	// UI references.
-	private EditText mEmailView;
+	private EditText mUsernameView;
 	private EditText mPasswordView;
 	private View mLoginFormView;
 	private View mLoginStatusView;
@@ -55,9 +69,7 @@ public class Login extends Activity {
 		setContentView(R.layout.activity_login);
 
 		// Set up the login form.
-		mEmail = getIntent().getStringExtra(EXTRA_EMAIL);
-		mEmailView = (EditText) findViewById(R.id.user_username);
-		mEmailView.setText(mEmail);
+		mUsernameView = (EditText) findViewById(R.id.user_username);
 
 		mPasswordView = (EditText) findViewById(R.id.password);
 		mPasswordView
@@ -104,11 +116,11 @@ public class Login extends Activity {
 		}
 
 		// Reset errors.
-		mEmailView.setError(null);
+		mUsernameView.setError(null);
 		mPasswordView.setError(null);
 
 		// Store values at the time of the login attempt.
-		mEmail = mEmailView.getText().toString();
+		mUsername = mUsernameView.getText().toString();
 		mPassword = mPasswordView.getText().toString();
 
 		boolean cancel = false;
@@ -119,20 +131,16 @@ public class Login extends Activity {
 			mPasswordView.setError(getString(R.string.error_field_required));
 			focusView = mPasswordView;
 			cancel = true;
-		} else if (mPassword.length() < 4) {
+		} else if (mPassword.length() < 1) {
 			mPasswordView.setError(getString(R.string.error_invalid_password));
 			focusView = mPasswordView;
 			cancel = true;
 		}
 
 		// Check for a valid email address.
-		if (TextUtils.isEmpty(mEmail)) {
-			mEmailView.setError(getString(R.string.error_field_required));
-			focusView = mEmailView;
-			cancel = true;
-		} else if (!mEmail.contains("@")) {
-			mEmailView.setError(getString(R.string.error_invalid_email));
-			focusView = mEmailView;
+		if (TextUtils.isEmpty(mUsername)) {
+			mUsernameView.setError(getString(R.string.error_field_required));
+			focusView = mUsernameView;
 			cancel = true;
 		}
 
@@ -147,6 +155,9 @@ public class Login extends Activity {
 			showProgress(true);
 			mAuthTask = new UserLoginTask();
 			mAuthTask.execute((Void) null);
+			
+            Intent addIntent = new Intent(this, UserAds.class);
+    		startActivity(addIntent);
 		}
 	}
 
@@ -196,27 +207,125 @@ public class Login extends Activity {
 	 * the user.
 	 */
 	public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+		private static final String URL_LOGIN = "http://mil08.uqtr.ca/~milnx613/selectUser.php";
+
 		@Override
 		protected Boolean doInBackground(Void... params) {
-			// TODO: attempt authentication against a network service.
 
-			try {
-				// Simulate network access.
+			try 
+			{
+				ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+		        
+		        if(networkInfo != null && networkInfo.isConnected())
+		        {
+		        	InputStream inputStream = null;
+		            String result = "";
+
+		    		try 
+		    		{
+		                HttpClient httpclient = new DefaultHttpClient();
+		                HttpPost httpPost = new HttpPost(URL_LOGIN);
+
+		                String json = "";
+		                JSONObject jsonObject = new JSONObject();
+		                
+		    			jsonObject.put("username", mUsername);
+		    			jsonObject.put("password", hashPassword(mPassword));
+		    			
+		                
+		                json = jsonObject.toString();
+		                StringEntity se = new StringEntity(json);
+		                httpPost.setEntity(se);
+		                httpPost.setHeader("Accept", "application/json");
+		                httpPost.setHeader("Content-type", "application/json");
+		               
+		                HttpResponse httpResponse = httpclient.execute(httpPost);
+		     
+		                inputStream = httpResponse.getEntity().getContent();
+		                if(inputStream != null)
+		                {
+		                    result = convertInputStreamToString(inputStream);
+
+		                    try
+		                    {
+			                    JSONObject o = new JSONObject(result);
+			                    JSONArray jsonUser = o.getJSONArray("message");
+			                    int arrSize = jsonUser.length();
+			                    for (int i = 0; i < arrSize; ++i) {
+			                        o = jsonUser.getJSONObject(i);
+			                        
+			                        Address address = new Address(o.getInt("F_STREET_NB"),
+				                    		o.getString("F_STREET_NAME"), 
+				                    		o.getString("F_APP_NB"), 
+				                    		o.getString("F_CITY"), 
+				                    		o.getString("F_PROVINCE"), 
+				                    		o.getString("F_POST_CODE"));
+				                    
+			                        Session.setCurrentUser(new User(o.getInt("F_ID_USER"), 
+				                    				o.getString("F_LASTNAME"), 
+				                    				o.getString("F_NAME"), 
+				                    				o.getString("F_USERNAME"), 
+				                    				o.getString("F_PASSWORD"), 
+				                    				address, 
+				                    				o.getString("F_PHONE"), 
+				                    				o.getString("F_EMAIL"), 
+				                    				o.getString("F_SEX").charAt(0), 
+				                    				o.getInt("F_AGE")));
+			                    }
+		                    }
+		                    catch(JSONException e) {
+		                    e.printStackTrace();
+		                    }
+		                }
+		                else
+		                    return false;
+		     
+		            } catch (Exception e) {
+		                Log.d("InputStream", e.getLocalizedMessage());
+		            }
+		        }
+		        
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				return false;
 			}
 
-			for (String credential : DUMMY_CREDENTIALS) {
-				String[] pieces = credential.split(":");
-				if (pieces[0].equals(mEmail)) {
-					// Account exists, return true if the password matches.
-					return pieces[1].equals(mPassword);
-				}
+			return true;
+		}
+		
+		private String convertInputStreamToString(InputStream inputStream) throws IOException{
+	        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
+	        String line = "";
+	        String result = "";
+	        while((line = bufferedReader.readLine()) != null)
+	            result += line;
+	 
+	        inputStream.close();
+	        return result;
+	    }
+		
+		private String hashPassword(String password) {
+	        StringBuffer sb = new StringBuffer();
+			
+			try
+			{
+				MessageDigest md = MessageDigest.getInstance("SHA-256");
+		        md.update(password.getBytes());
+		 
+		        byte byteData[] = md.digest();
+		 
+		        //convert the byte to hex format method 1
+		        for (int i = 0; i < byteData.length; i++) {
+		         sb.append(Integer.toString((byteData[i] & 0xff) + 0x100, 16).substring(1));
+		        }
+			}
+			catch(NoSuchAlgorithmException e)
+			{
+				e.printStackTrace();
 			}
 
-			// TODO: register the new account here.
-			return true;
+	        return sb.toString();
 		}
 
 		@Override
@@ -224,9 +333,12 @@ public class Login extends Activity {
 			mAuthTask = null;
 			showProgress(false);
 
-			if (success) {
+			if (success) 
+			{
 				finish();
-			} else {
+			} 
+			else 
+			{
 				mPasswordView
 						.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();

@@ -6,9 +6,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 
-import model.CovoiturageContract.AdEntry;
-import model.CovoiturageContract.CovoiturageDbHelper;
-
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
@@ -17,16 +14,13 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.ContentValues;
-import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class CreateAd extends AsyncTask<HashMap<String, Object>, Void, String> {
+public class CreateUser extends AsyncTask<HashMap<String, String>, Void, String> {
 
 	@Override
-	protected String doInBackground(HashMap<String, Object>... params) {
+	protected String doInBackground(HashMap<String, String>... params) {
 		try
 		{
 			return doCreate(params[0]);
@@ -37,25 +31,25 @@ public class CreateAd extends AsyncTask<HashMap<String, Object>, Void, String> {
 		}
 	}
 	
-	private String doCreate(HashMap<String, Object> params) throws IOException
+	private String doCreate(HashMap<String, String> params) throws IOException
 	{
 		InputStream inputStream = null;
         String result = "";
 
 		try {
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost((String) params.get("URL"));
+            HttpPost httpPost = new HttpPost(params.get("URL"));
 
             String json = "";
             JSONObject jsonObject = new JSONObject();
  
-            for (HashMap.Entry<String, Object> entry : params.entrySet()) {
+            for (HashMap.Entry<String, String> entry : params.entrySet()) {
 			    String key = entry.getKey();
-			    Object value = entry.getValue();
+			    String value = entry.getValue();
 			    
-			    if(key != "URL" && key != "context")
+			    if(key != "URL")
 			    {
-			    	jsonObject.put(key,(String) value);
+			    	jsonObject.put(key, value);
 			    }
 			}
             
@@ -77,31 +71,17 @@ public class CreateAd extends AsyncTask<HashMap<String, Object>, Void, String> {
             Log.d("InputStream", e.getLocalizedMessage());
         }
 		
-		String adId = "";
+		String userId = "";
 		
 		try 
 		{
 			JSONObject response = new JSONObject(result);
-			adId = response.getString("message");
+			userId = response.getString("message");
 		} catch (JSONException e1) {
 			e1.printStackTrace();
 		}
 
-		CovoiturageDbHelper mDbHelper = new CovoiturageDbHelper((Context)params.get("context"));
-		SQLiteDatabase db = mDbHelper.getWritableDatabase();
-		ContentValues values = new ContentValues();
-		values.put(AdEntry.F_ID_AD, Integer.parseInt(adId));
-		values.put(AdEntry.F_ID_USER, Integer.parseInt((String)params.get("idUser")));
-		values.put(AdEntry.F_DRIVER, (String)params.get("driver"));
-		values.put(AdEntry.F_TITLE, (String)params.get("title"));
-		values.put(AdEntry.F_DESCRIPTION, (String)params.get("description"));
-		values.put(AdEntry.F_NB_PLACE, Integer.parseInt((String)params.get("nbPlace")));
-		values.put(AdEntry.F_AIR_CONDITIONNER, (String)params.get("airConditionner"));
-		values.put(AdEntry.F_HEATER, (String)params.get("heater"));
-		
-		db.insert(AdEntry.T_AD, null, values);
-		
-		return result;
+		return userId;
 	}
 
 	private static String convertInputStreamToString(InputStream inputStream) throws IOException{

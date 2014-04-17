@@ -1,9 +1,12 @@
 package uqtr.covoituragemobile;
 
 import java.util.HashMap;
+
 import model.CovoiturageContract.AdEntry;
 import model.CovoiturageContract.CovoiturageDbHelper;
 import ServerTasks.CreateAd;
+import ServerTasks.DeleteAd;
+import ServerTasks.ModifyAd;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -20,6 +23,8 @@ import android.widget.EditText;
 
 public class ManageAds extends Activity {
 
+	private static final String URL_MODIFY_AD = "http://mil08.uqtr.ca/~milnx613/manageAd.php";
+	private static final String URL_DELETE_AD = "http://mil08.uqtr.ca/~milnx613/deleteAd.php";
 	final String URL_CREATE_AD = "http://mil08.uqtr.ca/~milnx613/manageAd.php";
 	
 	@Override
@@ -142,6 +147,36 @@ public class ManageAds extends Activity {
 		
 		db.update(AdEntry.T_AD, values, selection, selectionArgs);
 		
+		// Building Parameters
+		HashMap<String, String> params = new HashMap<String, String>();
+		
+		params.put("URL", URL_MODIFY_AD);
+		params.put("idAd", adId);
+		params.put("title", title.getText().toString());
+		params.put("nbPlace", nbPlace.getText().toString());
+		params.put("driver", driver.isChecked()? "1": "0");
+		params.put("airConditionner", airConditionner.isChecked()? "1": "0");
+		params.put("heater", heater.isChecked()? "1": "0");
+		params.put("description", description.getText().toString());
+
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        
+        if(networkInfo != null && networkInfo.isConnected())
+        {
+        	new ModifyAd().execute(params);
+        }
+        else
+        {
+        	AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+
+            dlgAlert.setMessage("No network connection available.");
+            dlgAlert.setTitle("Error Message...");
+            dlgAlert.setPositiveButton("OK", null);
+            dlgAlert.setCancelable(true);
+            dlgAlert.create().show();
+        }
+		
 		finish();
 	}
 	
@@ -155,7 +190,31 @@ public class ManageAds extends Activity {
 				adId
 		};
 		
+		// Building Parameters
+		HashMap<String, String> params = new HashMap<String, String>();
+		
+		params.put("URL", URL_DELETE_AD);
+		params.put("idAd", adId);
+		
 		db.delete(AdEntry.T_AD, selection, selectionArgs);
+		
+		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        
+        if(networkInfo != null && networkInfo.isConnected())
+        {
+        	new DeleteAd().execute(params);
+        }
+        else
+        {
+        	AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+
+            dlgAlert.setMessage("No network connection available.");
+            dlgAlert.setTitle("Error Message...");
+            dlgAlert.setPositiveButton("OK", null);
+            dlgAlert.setCancelable(true);
+            dlgAlert.create().show();
+        }
 		
 		finish();
 	}
