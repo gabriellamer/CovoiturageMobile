@@ -82,9 +82,10 @@ public class ManageAds extends Activity {
 		EditText description = (EditText) findViewById(R.id.etDescription);
 			
 		// Building Parameters
-		HashMap<String, String> params = new HashMap<String, String>();
+		HashMap<String, Object> params = new HashMap<String, Object>();
 		
 		params.put("URL", URL_CREATE_AD);
+		params.put("context", this);
 		params.put("idUser", userId);
 		params.put("title", title.getText().toString());
 		params.put("nbPlace", nbPlace.getText().toString());
