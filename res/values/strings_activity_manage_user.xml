@@ -10,11 +10,12 @@
     <string name="woman">Femme</string>
     <string name="street_number">No. Civique</string>
     <string name="street_name">Nom de rue</string>
-    <string name="app_number">No. app</string>
     <string name="city">Ville</string>
     <string name="province">Province</string>
     <string name="postal_code">Code postal</string>
     <string name="save_user">Sauvegarder</string>
     <string name="delete_user">Supprimer</string>
+    <string name="year">ans</string>
+    <string name="app_number">No. app</string>
     
 </resources>

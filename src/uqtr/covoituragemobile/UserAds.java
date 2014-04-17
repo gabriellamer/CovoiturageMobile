@@ -120,6 +120,10 @@ public class UserAds extends Activity {
 	        case R.id.action_add:
 	        	addAd();
 	            return true;
+	        case R.id.action_user_profile:
+	        	Intent userIntent = new Intent(this, ManageUser.class);
+	    		startActivity(userIntent);
+	            return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }

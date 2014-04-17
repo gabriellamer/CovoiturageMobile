@@ -13,34 +13,40 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 public class ManageUser extends Activity {
 
-	private static final String URL_DELETE_USER = null;
-	private static final String URL_MODIFY_USER = null;
+	private static final String URL_DELETE_USER = "http://mil08.uqtr.ca/~milnx613/deleteUser.php";
+	private static final String URL_MODIFY_USER = "http://mil08.uqtr.ca/~milnx613/manageUser.php";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_manage_user);
 		
-		if(getIntent().hasExtra("userId")) {
+		if(Session.getCurrentUser() != null) {
 			
 			EditText username   = (EditText) findViewById(R.id.user_username);
 			EditText name       = (EditText) findViewById(R.id.user_name);
 			EditText lastname   = (EditText) findViewById(R.id.user_lastname);
 			EditText phone      = (EditText) findViewById(R.id.user_phone);
 			EditText email      = (EditText) findViewById(R.id.user_email);
-			RadioButton sex     = (RadioButton) findViewById(R.id.user_man);
+			RadioButton man     = (RadioButton) findViewById(R.id.user_man);
+			RadioButton woman   = (RadioButton) findViewById(R.id.user_woman);
 			EditText age        = (EditText) findViewById(R.id.user_age);
 			EditText streetnbr  = (EditText) findViewById(R.id.user_street_nbr);
 			EditText streetname = (EditText) findViewById(R.id.user_streetname);
 			EditText city       = (EditText) findViewById(R.id.user_city);
 			EditText province   = (EditText) findViewById(R.id.user_province);
+			EditText postalCode = (EditText) findViewById(R.id.user_postalcode);
+			EditText appNb      = (EditText) findViewById(R.id.user_appNb);
 			
 			User currentUser = Session.getCurrentUser();
 			
@@ -49,19 +55,26 @@ public class ManageUser extends Activity {
 			lastname.setText(currentUser.getLastName());
 			phone.setText(currentUser.getPhone());
 			email.setText(currentUser.getEmail());
-			sex.setText(currentUser.getSex());
-			age.setText(currentUser.getAge());
-			streetnbr.setText(currentUser.getAddress().getStreetNb());
+			
+			if(currentUser.getSex() == 'm')
+				man.setChecked(true);
+			else
+				woman.setChecked(true);
+			
+			age.setText("" + currentUser.getAge());
+			streetnbr.setText("" + currentUser.getAddress().getStreetNb());
 			streetname.setText(currentUser.getAddress().getStreetName());
+			postalCode.setText(currentUser.getAddress().getPostalCode());
 			city.setText(currentUser.getAddress().getCity());
 			province.setText(currentUser.getAddress().getProvince());
+			appNb.setText(currentUser.getAddress().getAppNb());
 
 			final Button btnDelete = (Button) findViewById(R.id.btnDelUser);
 			btnDelete.setVisibility(View.VISIBLE);
 			btnDelete.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					deleteUser(getIntent().getStringExtra("userId"));
+					deleteUser();
 				}
 			});
 		}
@@ -70,9 +83,7 @@ public class ManageUser extends Activity {
 		btnSave.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String userId = getIntent().getStringExtra("userId");
-				
-				if(userId != null && !userId.isEmpty()) {
+				if(Session.getCurrentUser() != null) {
 					modifyUser();
 				} else {
 					createUser();
@@ -81,13 +92,31 @@ public class ManageUser extends Activity {
 		});
 	}
 	
-	private void deleteUser(String userId) {
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case R.id.action_user_ads:
+	        	Intent adsIntent = new Intent(this, UserAds.class);
+	    		startActivity(adsIntent);
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.user, menu);
+		return true;
+	}
+	
+	private void deleteUser() {
 			
 		// Building Parameters
 		HashMap<String, String> params = new HashMap<String, String>();
 		
 		params.put("URL", URL_DELETE_USER);
-		params.put("idUser", userId);
+		params.put("idUser", "" + Session.getCurrentUser().getId());
 		
 		ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -154,7 +183,8 @@ public class ManageUser extends Activity {
 		EditText streetName = (EditText) findViewById(R.id.user_streetname);
 		EditText city       = (EditText) findViewById(R.id.user_city);
 		EditText province   = (EditText) findViewById(R.id.user_province);
-		
+		EditText postalCode = (EditText) findViewById(R.id.user_postalcode);
+		EditText appNb      = (EditText) findViewById(R.id.user_appNb);
 		
 		user.setUsername(userName.getText().toString());
 		user.setName(name.getText().toString());
@@ -167,6 +197,8 @@ public class ManageUser extends Activity {
 		user.getAddress().setStreetName(streetName.getText().toString());
 		user.getAddress().setCity(city.getText().toString());
 		user.getAddress().setProvince(province.getText().toString());
+		user.getAddress().setPostalCode(postalCode.getText().toString());
+		user.getAddress().setAppNb(appNb.getText().toString());
 		
 		// Building Parameters
 		HashMap<String, String> params = new HashMap<String, String>();
@@ -183,9 +215,12 @@ public class ManageUser extends Activity {
 		
 		params.put("streetNb", "" + user.getAddress().getStreetNb());
 		params.put("streetName", user.getAddress().getStreetName());
+		params.put("appNb", user.getAddress().getAppNb());
 		params.put("city", user.getAddress().getCity());
 		params.put("province", user.getAddress().getProvince());
-
+		params.put("postalCode", user.getAddress().getPostalCode());
+		params.put("appNb", user.getAddress().getAppNb());
+		
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         
@@ -203,5 +238,8 @@ public class ManageUser extends Activity {
             dlgAlert.setCancelable(true);
             dlgAlert.create().show();
         }
+        
+        Toast toast = Toast.makeText(this, "Modification effectuée.", Toast.LENGTH_SHORT);
+        toast.show();
 	}
 }

@@ -156,8 +156,8 @@ public class Login extends Activity {
 			mAuthTask = new UserLoginTask();
 			mAuthTask.execute((Void) null);
 			
-            Intent addIntent = new Intent(this, UserAds.class);
-    		startActivity(addIntent);
+			Intent searchIntent = new Intent(this, Search.class);
+    		startActivity(searchIntent);
 		}
 	}
 

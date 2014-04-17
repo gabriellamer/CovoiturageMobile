@@ -6,15 +6,15 @@ public class Address {
 	private String appNb;
 	private String city;
 	private String province;
-	private String posteCode;
+	private String postalCode;
 	
-	public Address(int streetNb, String streetName, String appNb, String city, String province, String posteCode) {
+	public Address(int streetNb, String streetName, String appNb, String city, String province, String postalCode) {
 		this.streetNb = streetNb;
 		this.streetName = streetName;
 		this.appNb = appNb;
 		this.city = city;
 		this.province = province;
-		this.posteCode = posteCode;
+		this.postalCode = postalCode;
 	}
 	
 	public int getStreetNb() {
@@ -47,10 +47,10 @@ public class Address {
 	public void setProvince(String province) {
 		this.province = province;
 	}
-	public String getPosteCode() {
-		return posteCode;
+	public String getPostalCode() {
+		return postalCode;
 	}
-	public void setPosteCode(String posteCode) {
-		this.posteCode = posteCode;
+	public void setPostalCode(String postalCode) {
+		this.postalCode = postalCode;
 	}
 }

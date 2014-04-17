@@ -71,13 +71,26 @@
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/user_age"
-        android:layout_width="89dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/age"
-        android:inputType="number" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/user_age"
+            android:layout_width="68dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/age"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.01"
+            android:text="@string/year" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -108,12 +121,27 @@
         android:ems="10"
         android:hint="@string/city" />
 
-    <EditText
-        android:id="@+id/user_postalcode"
-        android:layout_width="119dp"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:hint="@string/postal_code" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/user_postalcode"
+            android:layout_width="143dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/postal_code" />
+
+        <EditText
+            android:id="@+id/user_appNb"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.51"
+            android:ems="10"
+            android:hint="@string/app_number"
+            android:inputType="number" />
+
+    </LinearLayout>
 
     <AutoCompleteTextView
         android:id="@+id/user_province"
