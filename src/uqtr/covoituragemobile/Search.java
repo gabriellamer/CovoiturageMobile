@@ -5,12 +5,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.SeekBar;
 
 public class Search extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search);
+		
+		EditText description = (EditText) findViewById(R.id.search_description);
+		CheckBox man = (CheckBox) findViewById(R.id.search_man);
+		CheckBox woman = (CheckBox) findViewById(R.id.search_woman);
+		CheckBox driver = (CheckBox) findViewById(R.id.search_driver);
+		CheckBox passenger = (CheckBox) findViewById(R.id.search_passenger);
+		CheckBox heater = (CheckBox) findViewById(R.id.search_heater);
+		CheckBox airConditionner = (CheckBox) findViewById(R.id.search_air_conditionner);
 	}
 	
 	@Override

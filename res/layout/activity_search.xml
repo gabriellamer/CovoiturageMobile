@@ -28,8 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/man"
-            android:textColor="#FFFFFF"
-            android:textColorHint="@dimen/activity_horizontal_margin" />
+            android:textColor="#FFFFFF"/>
 
         <CheckBox
             android:id="@+id/search_woman"
@@ -108,7 +107,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="17dp"
         android:background="#55CB6A"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
