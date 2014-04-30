@@ -21,5 +21,6 @@
     <string name="action_ads">Mes annonces</string>
     <string name="action_profile">Mon profil</string>
     <string name="search_search">Rechercher</string>
+    <string name="title_activity_search_ads">SearchAds</string>
 
 </resources>

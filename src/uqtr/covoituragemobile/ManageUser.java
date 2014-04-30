@@ -1,6 +1,8 @@
 package uqtr.covoituragemobile;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 import model.Session;
 import model.User;
@@ -10,6 +12,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -200,6 +203,21 @@ public class ManageUser extends Activity {
 		user.getAddress().setPostalCode(postalCode.getText().toString());
 		user.getAddress().setAppNb(appNb.getText().toString());
 		
+		String locationName = user.getAddress().getStreetNb() + " " + user.getAddress().getStreetName() + " " + user.getAddress().getAppNb() + " " + user.getAddress().getCity() + " " + user.getAddress().getProvince() + " " + user.getAddress().getPostalCode(); 
+		
+		Geocoder gc = new Geocoder(this);
+		List<android.location.Address> list = null;
+		try {
+			list = gc.getFromLocationName(locationName, 1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		android.location.Address add = list.get(0);
+		
+		user.getAddress().setLatitude(add.getLatitude());
+		user.getAddress().setLongitude(add.getLongitude());
+		
 		// Building Parameters
 		HashMap<String, String> params = new HashMap<String, String>();
 		
@@ -220,6 +238,8 @@ public class ManageUser extends Activity {
 		params.put("province", user.getAddress().getProvince());
 		params.put("postalCode", user.getAddress().getPostalCode());
 		params.put("appNb", user.getAddress().getAppNb());
+		params.put("latitude", "" + user.getAddress().getLatitude());
+		params.put("longitude", "" + user.getAddress().getLongitude());
 		
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -239,7 +259,7 @@ public class ManageUser extends Activity {
             dlgAlert.create().show();
         }
         
-        Toast toast = Toast.makeText(this, "Modification effectuée.", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(this, "Modification effectuee.", Toast.LENGTH_SHORT);
         toast.show();
 	}
 }

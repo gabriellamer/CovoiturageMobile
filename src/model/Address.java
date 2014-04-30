@@ -7,14 +7,18 @@ public class Address {
 	private String city;
 	private String province;
 	private String postalCode;
+	private double latitude;
+	private double longitude;
 	
-	public Address(int streetNb, String streetName, String appNb, String city, String province, String postalCode) {
+	public Address(int streetNb, String streetName, String appNb, String city, String province, String postalCode, double latitude, double longitude) {
 		this.streetNb = streetNb;
 		this.streetName = streetName;
 		this.appNb = appNb;
 		this.city = city;
 		this.province = province;
 		this.postalCode = postalCode;
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 	
 	public int getStreetNb() {
@@ -52,5 +56,21 @@ public class Address {
 	}
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
+	}
+
+	public double getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(double latitude) {
+		this.latitude = latitude;
+	}
+
+	public double getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(double longitude) {
+		this.longitude = longitude;
 	}
 }

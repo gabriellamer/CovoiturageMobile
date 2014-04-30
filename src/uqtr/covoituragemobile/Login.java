@@ -61,6 +61,7 @@ public class Login extends Activity {
 	private View mLoginFormView;
 	private View mLoginStatusView;
 	private TextView mLoginStatusMessageView;
+	private Context loginContext = this;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -155,9 +156,6 @@ public class Login extends Activity {
 			showProgress(true);
 			mAuthTask = new UserLoginTask();
 			mAuthTask.execute((Void) null);
-			
-			Intent searchIntent = new Intent(this, Search.class);
-    		startActivity(searchIntent);
 		}
 	}
 
@@ -249,8 +247,14 @@ public class Login extends Activity {
 
 		                    try
 		                    {
-			                    JSONObject o = new JSONObject(result);
+		                    	JSONObject o = new JSONObject(result);
+		                    	
+		                    	if(o.getInt("success") == 0) {
+			                    	return false;
+			                    }
+		                    	
 			                    JSONArray jsonUser = o.getJSONArray("message");
+			                    
 			                    int arrSize = jsonUser.length();
 			                    for (int i = 0; i < arrSize; ++i) {
 			                        o = jsonUser.getJSONObject(i);
@@ -260,7 +264,9 @@ public class Login extends Activity {
 				                    		o.getString("F_APP_NB"), 
 				                    		o.getString("F_CITY"), 
 				                    		o.getString("F_PROVINCE"), 
-				                    		o.getString("F_POST_CODE"));
+				                    		o.getString("F_POST_CODE"),
+				                    		o.getDouble("F_LATITUDE"),
+				                    		o.getDouble("F_LONGITUDE"));
 				                    
 			                        Session.setCurrentUser(new User(o.getInt("F_ID_USER"), 
 				                    				o.getString("F_LASTNAME"), 
@@ -335,12 +341,15 @@ public class Login extends Activity {
 
 			if (success) 
 			{
+				
+				Intent searchIntent = new Intent(loginContext, Search.class);
+				startActivity(searchIntent);
+				
 				finish();
 			} 
 			else 
 			{
-				mPasswordView
-						.setError(getString(R.string.error_incorrect_password));
+				mPasswordView.setError(getString(R.string.error_incorrect_password));
 				mPasswordView.requestFocus();
 			}
 		}

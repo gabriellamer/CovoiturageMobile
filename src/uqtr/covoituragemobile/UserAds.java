@@ -1,10 +1,13 @@
 package uqtr.covoituragemobile;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import model.*;
 import model.CovoiturageContract.AdEntry;
 import model.CovoiturageContract.CovoiturageDbHelper;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
@@ -35,7 +38,19 @@ public class UserAds extends Activity {
 		listAds = new ArrayList<Ad>();
 		arrayAdapter = new AdsListAdapter(this, R.layout.list_ad, listAds);
 		
-		Address addressTest = new Address(282, "rue Boulard", null, "Trois-Rivières", "Québec", "G8T9G9");
+		String locationName = "282 rue Boulard Trois-Rivières Québec G8T9G9"; 
+		
+		Geocoder gc = new Geocoder(this);
+		List<android.location.Address> list = null;
+		try {
+			list = gc.getFromLocationName(locationName, 1);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		android.location.Address add = list.get(0);
+		
+		Address addressTest = new Address(282, "rue Boulard", null, "Trois-Rivières", "Québec", "G8T9G9", add.getLatitude(), add.getLongitude());
 		
 		userTest = new User(1, "lamer", "gabriel", "glamer", "glamer", addressTest, "450-808-8877", "gabriel.lamer@hotmail.ca", 'M', 21);
 		

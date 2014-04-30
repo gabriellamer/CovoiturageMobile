@@ -3,7 +3,7 @@
     package="uqtr.covoituragemobile"
     android:versionCode="1"
     android:versionName="1.0" >
-    
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -25,7 +25,6 @@
             android:name="uqtr.covoituragemobile.ManageAds"
             android:label="@string/title_activity_add_ads"
             android:parentActivityName="uqtr.covoituragemobile.UserAds" >
-            
         </activity>
         <activity
             android:name="uqtr.covoituragemobile.User"
@@ -49,6 +48,10 @@
         <activity
             android:name="uqtr.covoituragemobile.Search"
             android:label="@string/title_activity_search" >
+        </activity>
+        <activity
+            android:name="uqtr.covoituragemobile.SearchAds"
+            android:label="@string/title_activity_search_ads" >
         </activity>
     </application>
 
